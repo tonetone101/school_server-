@@ -5,6 +5,9 @@ require('dotenv').config();
 //user routes
 const userRoutes = require('./routes/user');
 
+//post routes
+const postRoutes = require('./routes/post');
+
 // our app
 const app = express();
 
@@ -17,6 +20,7 @@ mongoose.connect(process.env.DATABASE, {
 
 //routes middleware
 app.use('/api', userRoutes);
+app.use('/post', postRoutes);
 
 const port = process.env.PORT || 8000
 
