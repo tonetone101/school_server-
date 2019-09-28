@@ -7,8 +7,12 @@ const cookieParser = require('cookie-parser')
 require('dotenv').config();
 
 
+//auth routes
+const authRoutes = require('./routes/auth');
+
 //user routes
 const userRoutes = require('./routes/user');
+
 
 //post routes
 const postRoutes = require('./routes/post');
@@ -30,8 +34,11 @@ app.use(cookieParser())
 app.use(expressValidator())
 
 //routes middleware
+app.use('/api', authRoutes);
 app.use('/api', userRoutes);
+
 app.use('/post', postRoutes);
+
 
 
 
