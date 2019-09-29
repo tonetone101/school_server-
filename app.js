@@ -39,7 +39,7 @@ app.use(cors())
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 
-app.use('/post', postRoutes);
+app.use('/api', postRoutes);
 
 // middleware function for unauthorized users error
 app.use(function (err, req, res, next) {
