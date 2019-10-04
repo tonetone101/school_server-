@@ -39,9 +39,7 @@ exports.allUsers = (req, res) => {
                 error: err
             })
         }
-        res.json({
-            users
-        })
+        res.json(users)
     }).select('name email profileImageUrl about role updated created')
 }
 

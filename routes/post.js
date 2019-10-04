@@ -14,9 +14,9 @@ const {userById} = require('../controllers/user')
 
 const router = express.Router();
 
-router.get('/', getPosts); // to see all post
+router.get('/posts', getPosts); // to see all post
 router.post('/post/new/:userId', requireSignin, createPost, createPostValidator); // to create new post
-router.get('/posts/by/:userId', postByUser) // to view post by certain user
+router.get('/post/by/:userId', postByUser) // to view post by certain user
 router.delete('/post/:postId', requireSignin, isPoster, deletePost)
 router.put('/post/:postId', requireSignin, isPoster, updatePost)
 
