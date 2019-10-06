@@ -52,6 +52,23 @@ exports.getUser = (req, res) => {
     return res.json(req.profile)
 }
 
+ /*exports.updateUser = (req, res, next) => {
+     let user = req.profile;
+     user = _.extend(user, req.body); // extend - mutate the source object
+     user.updated = Date.now();
+     user.save(err => {
+         if (err) {
+             return res.status(400).json({
+                 error: "You are not authorized to perform this action"
+             });
+         }
+         user.hashed_password = undefined;
+         user.salt = undefined;
+         res.json({ user });
+     });
+ };*/
+
+// to update with photo image
 exports.updateUser = (req, res, next) => {
     let form = new formidable.IncomingForm();
     // console.log("incoming form data: ", form);
@@ -88,6 +105,15 @@ exports.updateUser = (req, res, next) => {
         });
     });
 };
+
+// to show user photo
+exports.userPhoto = (req, res, next) => {
+    if(req.profile.photo.data) {
+        res.set(("Content-Type", req.profile.photo.contentType))
+        return res.send(req.profile.photo.data)
+    }
+    next()
+}
 
 exports.deleteUser = (req, res) => {
     let user = req.profile;

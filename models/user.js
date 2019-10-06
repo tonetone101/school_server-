@@ -35,10 +35,10 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    history: {
-        type: Array,
-        default: []
-    }
+   photo: {
+       data: Buffer,
+       contentType: String
+   }
 }, 
 {timestamps: true}
 
