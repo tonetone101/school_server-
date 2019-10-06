@@ -18,7 +18,7 @@ router.put('/user/:userId', requireSignin, isAuth, updateUser) // to update
 router.delete('/user/:userId', requireSignin, isAuth, deleteUser) // to deletes
 
 //photo
-router.get('/user/photo/userId', userPhoto)
+router.get('/user/photo/:userId', userPhoto)
 
 router.param('userId', userById)
 
