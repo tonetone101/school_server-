@@ -1,16 +1,17 @@
 const express = require('express');
 const router = express.Router();
 
-const {userById, allUsers, getUser, updateUser, deleteUser, userPhoto, hasAuthorization } = require('../controllers/user');
+const {userById, 
+        allUsers, getUser, 
+        updateUser, deleteUser, 
+        userPhoto, 
+        addFollowing, addFollower, 
+        removeFollower, removeFollowing,
+        hasAuthorization } = require('../controllers/user');
 const {requireSignin, isAuth, isAdmin } = require('../controllers/auth');
 
-
-/* router.get('/secret/:userId', requireSignin, isAuth, isAdmin, (req, res) => {
-    res.json({
-        user: req.profile
-    })
-})*/ 
-
+router.put('/user/follow', requireSignin, addFollowing, addFollower)
+router.put('/user/unfollow', requireSignin, removeFollowing, removeFollower)
 
 router.get('/users', allUsers) // to see all users
 router.get('/user/:userId', requireSignin, getUser) // to see single user
