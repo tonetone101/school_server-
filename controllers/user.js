@@ -49,7 +49,7 @@ exports.allUsers = (req, res) => {
 }
 
 exports.getUser = (req, res) => {
-    req.profile.hashed_password = undefined
+    // req.profile.hashed_password = undefined
     req.profile.salt = undefined
     req.profile.history = undefined
    
@@ -188,3 +188,15 @@ exports.removeFollower = (req, res) => {
        })
 }
 
+exports.findPeople = (req, res) => {
+    let following = req.profile.following
+    following.push(req.profile._id)
+    User.find({_id: {$nin: following}}, (err, users) => {
+        if(err) {
+            return res.status(400).json({
+                error: err
+            })
+        }
+        res.json(users)
+    }).select('name')
+}

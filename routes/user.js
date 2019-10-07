@@ -7,6 +7,7 @@ const {userById,
         userPhoto, 
         addFollowing, addFollower, 
         removeFollower, removeFollowing,
+        findPeople,
         hasAuthorization } = require('../controllers/user');
 const {requireSignin, isAuth, isAdmin } = require('../controllers/auth');
 
@@ -20,6 +21,9 @@ router.delete('/user/:userId', requireSignin, isAuth, deleteUser) // to deletes
 
 //photo
 router.get('/user/photo/:userId', userPhoto)
+
+// suggested followers
+router.get('/user/findpeople/:userId', requireSignin, findPeople)
 
 router.param('userId', userById)
 
