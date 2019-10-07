@@ -5,20 +5,19 @@ const fs = require('fs');
 
 exports.userById = (req, res, next, id) => {
     User.findById(id)
-    //populate followers/following users array
-    // what you want to populate and what fields you want to poplate with
-    .populate('following', '_id name')
-    .populate('follower', '_id name')
-    .exec((err, user) => {
-        if(err || !user) {
-            return res.status(400).json({
-                error: 'User not found'
-            })
-        }
-        req.profile = user;
-        next()
-    })
-}
+        // populate followers and following users array
+        .populate('following', '_id name')
+        .populate('followers', '_id name')
+        .exec((err, user) => {
+            if (err || !user) {
+                return res.status(400).json({
+                    error: 'User not found'
+                });
+            }
+            req.profile = user; // adds profile object in req with user info
+            next();
+        });
+};
 
 exports.hasAuthorization = (req, res, next) => {
     let sameUser = req.profile && req.auth && req.profile._id == req.auth._id;
@@ -39,41 +38,37 @@ exports.hasAuthorization = (req, res, next) => {
 
 exports.allUsers = (req, res) => {
     User.find((err, users) => {
-        if(err ) {
+        if (err) {
             return res.status(400).json({
                 error: err
-            })
+            });
         }
-        res.json(users)
-    }).select('name email profileImageUrl about role updated created')
-}
+        res.json(users);
+    }).select('name email updated created role');
+};
 
 exports.getUser = (req, res) => {
-    // req.profile.hashed_password = undefined
-    req.profile.salt = undefined
-    req.profile.history = undefined
-   
+    req.profile.hashed_password = undefined;
+    req.profile.salt = undefined;
+    return res.json(req.profile);
+};
 
-    return res.json(req.profile)
-}
+// exports.updateUser = (req, res, next) => {
+//     let user = req.profile;
+//     user = _.extend(user, req.body); // extend - mutate the source object
+//     user.updated = Date.now();
+//     user.save(err => {
+//         if (err) {
+//             return res.status(400).json({
+//                 error: "You are not authorized to perform this action"
+//             });
+//         }
+//         user.hashed_password = undefined;
+//         user.salt = undefined;
+//         res.json({ user });
+//     });
+// };
 
- /*exports.updateUser = (req, res, next) => {
-     let user = req.profile;
-     user = _.extend(user, req.body); // extend - mutate the source object
-     user.updated = Date.now();
-     user.save(err => {
-         if (err) {
-             return res.status(400).json({
-                 error: "You are not authorized to perform this action"
-             });
-         }
-         user.hashed_password = undefined;
-         user.salt = undefined;
-         res.json({ user });
-     });
- };*/
-
-// to update with photo image
 exports.updateUser = (req, res, next) => {
     let form = new formidable.IncomingForm();
     // console.log("incoming form data: ", form);
@@ -111,92 +106,87 @@ exports.updateUser = (req, res, next) => {
     });
 };
 
-// to show user photo
 exports.userPhoto = (req, res, next) => {
-    if(req.profile.photo.data) {
-        res.set(("Content-Type", req.profile.photo.contentType))
-        return res.send(req.profile.photo.data)
+    if (req.profile.photo.data) {
+        res.set(('Content-Type', req.profile.photo.contentType));
+        return res.send(req.profile.photo.data);
     }
-    next()
-}
+    next();
+};
 
-exports.deleteUser = (req, res) => {
+exports.deleteUser = (req, res, next) => {
     let user = req.profile;
     user.remove((err, user) => {
-        if(err) {
+        if (err) {
             return res.status(400).json({
                 error: err
-            })
+            });
         }
-        res.json({message: "User deleted successfully"});
-    })
-}
+        res.json({ message: 'User deleted successfully' });
+    });
+};
 
-// to follow 
+// follow unfollow
 exports.addFollowing = (req, res, next) => {
-    User.findByIdAndUpdate(req.body.userId, {$push: {following: req.body.followId}}, (err, result) => {
-        if(err) {
-            return res.status(400).json({error: err})
+    User.findByIdAndUpdate(req.body.userId, { $push: { following: req.body.followId } }, (err, result) => {
+        if (err) {
+            return res.status(400).json({ error: err });
         }
-        next()
-    })
-}
+        next();
+    });
+};
 
 exports.addFollower = (req, res) => {
-    User.findByIdAndUpdate(req.body.followId, {$push: {followers: req.body.userId}}, 
-        {new: true}
-       )
-       .populate('following', '_id name')
-       .populate('followers', '_id name')
-       .exec((err, result) => {
-           if(err) {
-               return res.status(400).json({
-                   error: err
-               })
-           }
-           result.hashed_password = undefined
-           result.salt = undefined
-           res.json(result)
-       })
-}
+    User.findByIdAndUpdate(req.body.followId, { $push: { followers: req.body.userId } }, { new: true })
+        .populate('following', '_id name')
+        .populate('followers', '_id name')
+        .exec((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            }
+            result.hashed_password = undefined;
+            result.salt = undefined;
+            res.json(result);
+        });
+};
 
-// to unfollow
+// remove follow unfollow
 exports.removeFollowing = (req, res, next) => {
-    User.findByIdAndUpdate(req.body.userId, {$pull: {following: req.body.unfollowId}}, (err, result) => {
-        if(err) {
-            return res.status(400).json({error: err})
+    User.findByIdAndUpdate(req.body.userId, { $pull: { following: req.body.unfollowId } }, (err, result) => {
+        if (err) {
+            return res.status(400).json({ error: err });
         }
-        next()
-    })
-}
+        next();
+    });
+};
 
 exports.removeFollower = (req, res) => {
-    User.findByIdAndUpdate(req.body.unfollowId, {$pull: {followers: req.body.userId}}, 
-        {new: true}
-       )
-       .populate('following', '_id name')
-       .populate('followers', '_id name')
-       .exec((err, result) => {
-           if(err) {
-               return res.status(400).json({
-                   error: err
-               })
-           }
-           result.hashed_password = undefined
-           result.salt = undefined
-           res.json(result)
-       })
-}
+    User.findByIdAndUpdate(req.body.unfollowId, { $pull: { followers: req.body.userId } }, { new: true })
+        .populate('following', '_id name')
+        .populate('followers', '_id name')
+        .exec((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            }
+            result.hashed_password = undefined;
+            result.salt = undefined;
+            res.json(result);
+        });
+};
 
 exports.findPeople = (req, res) => {
-    let following = req.profile.following
-    following.push(req.profile._id)
-    User.find({_id: {$nin: following}}, (err, users) => {
-        if(err) {
+    let following = req.profile.following;
+    following.push(req.profile._id);
+    User.find({ _id: { $nin: following } }, (err, users) => {
+        if (err) {
             return res.status(400).json({
                 error: err
-            })
+            });
         }
-        res.json(users)
-    }).select('name')
-}
+        res.json(users);
+    }).select('name');
+};
