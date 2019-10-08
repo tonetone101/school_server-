@@ -24,7 +24,7 @@ exports.getPosts = (req, res) => {
         // to select the propery we want to display from post schema
         .select('_id title body')
         .then(posts => {
-            res.json({posts})
+            res.json(posts)
         })
         .catch(err => console.log(err));
 }
