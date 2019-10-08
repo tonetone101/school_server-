@@ -22,7 +22,7 @@ exports.getPosts = (req, res) => {
     const posts = Post.find()
         .populate('postedBy', '_id name profileImageUrl')
         // to select the propery we want to display from post schema
-        .select('_id title body')
+        .select('_id title body created')
         .then(posts => {
             res.json(posts)
         })
