@@ -23,6 +23,8 @@ exports.getPosts = (req, res) => {
         .populate('postedBy', '_id name profileImageUrl')
         // to select the propery we want to display from post schema
         .select('_id title body created')
+        // to show the latest post
+        .sort({created: -1})
         .then(posts => {
             res.json(posts)
         })
@@ -117,4 +119,9 @@ exports.deletePost = (req, res) => {
             message: "Post deleted successfully"
         })
     })
+}
+
+exports.photo = (req, res, next) => {
+    res.set("Content-Type", req.post.photo.contentType)
+    return res.send(req.post.photo.data)
 }
