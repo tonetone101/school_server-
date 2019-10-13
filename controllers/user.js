@@ -2,6 +2,7 @@ const _ = require('lodash');
 const User = require('../models/user');
 const formidable = require('formidable');
 const fs = require('fs');
+const multer = require('multer')
 
 exports.userById = (req, res, next, id) => {
     User.findById(id)
@@ -190,3 +191,29 @@ exports.findPeople = (req, res) => {
         res.json(users);
     }).select('name');
 };
+
+// // file
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//     cb(null, 'public')
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + '-' +file.originalname )
+//   }
+// })
+
+// const upload = multer({ storage: storage }).single('file')
+
+// exports.upload = function(req, res) {
+     
+//     upload(req, res, function (err) {
+//            if (err instanceof multer.MulterError) {
+//                return res.status(500).json(err)
+//            } else if (err) {
+//                return res.status(500).json(err)
+//            }
+//       return res.status(200).send(req.file)
+
+//     })
+
+// }

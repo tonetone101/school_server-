@@ -6,6 +6,7 @@ const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const fs = require('fs')
+const multer = require('multer')
 require('dotenv').config();
 
 
@@ -19,6 +20,9 @@ const userRoutes = require('./routes/user');
 //post routes
 const postRoutes = require('./routes/post');
 
+// //upload routes
+const uploadRoutes = require('./routes/upload');
+
 // our app
 const app = express();
 
@@ -29,6 +33,8 @@ mongoose.connect(process.env.DATABASE, {
     useUnifiedTopology: true
 }).then(() => console.log('DB connected'))
 
+
+
 //middlewares
 app.use(morgan('dev'))
 app.use(bodyParser.json())
@@ -36,10 +42,37 @@ app.use(cookieParser())
 app.use(expressValidator())
 app.use(cors())
 
+
 //routes middleware
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', postRoutes);
+app.use(uploadRoutes);
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+    cb(null, 'public')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' +file.originalname )
+  }
+})
+
+const upload = multer({ storage: storage }).single('file')
+
+app.post('api/user/upload',function(req, res) {
+     
+    upload(req, res, function (err) {
+           if (err instanceof multer.MulterError) {
+               return res.status(500).json(err)
+           } else if (err) {
+               return res.status(500).json(err)
+           }
+      return res.status(200).send(req.file)
+
+    })
+
+});
 
 //to view api Docs
 app.get('/', (req, res) => {
@@ -53,6 +86,8 @@ app.get('/', (req, res) => {
          res.json(docs)
     })
 })
+
+
  
 // middleware function for unauthorized users error
 app.use(function (err, req, res, next) {
