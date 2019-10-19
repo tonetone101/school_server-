@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const fs = require('fs')
 const multer = require('multer')
+const path = require('path')
 require('dotenv').config();
 
 
@@ -43,36 +44,16 @@ app.use(expressValidator())
 app.use(cors())
 
 
+
 //routes middleware
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', postRoutes);
-app.use(uploadRoutes);
+app.use('/api', uploadRoutes);
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-    cb(null, 'public')
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' +file.originalname )
-  }
-})
-
-const upload = multer({ storage: storage }).single('file')
-
-app.post('api/user/upload',function(req, res) {
-     
-    upload(req, res, function (err) {
-           if (err instanceof multer.MulterError) {
-               return res.status(500).json(err)
-           } else if (err) {
-               return res.status(500).json(err)
-           }
-      return res.status(200).send(req.file)
-
-    })
-
-});
+// app.get('/uploads/view', (req, res) => {
+//     res.sendFile("index.html", { root: path.join(__dirname, 'public') })
+// })
 
 //to view api Docs
 app.get('/', (req, res) => {

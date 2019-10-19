@@ -10,7 +10,7 @@ const uploadSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    file: {
+    photo: {
         data: Buffer,
         contentType: String
     },

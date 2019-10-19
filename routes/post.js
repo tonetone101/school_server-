@@ -15,7 +15,6 @@ const {
     uncomment,
     updateComment
 } = require('../controllers/post');
-const { uploader } = require('../controllers/upload');
 
 const { requireSignin } = require('../controllers/auth');
 const { userById, userPhoto } = require('../controllers/user');

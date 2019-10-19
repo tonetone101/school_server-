@@ -1,40 +1,54 @@
 const express = require('express');
-const router = express.Router();
-const multer = require('multer')
-
-
 const {
-    uploadFile,
-    getuploads,
-    createupload,
+    getUploads,
+    createUpload,
     uploadsByUser,
     uploadById,
-    isuploader,
-    updateupload,
-    deleteupload,
-    file,
-    singleupload
+    isUploader,
+    updateUpload,
+    deleteUpload,
+    photo,
+    singleUpload,
+    like,
+    unlike,
+    comment,
+    uncomment,
+    updateComment
 } = require('../controllers/upload');
-const { requireSignin } = require('../controllers/auth');
-const { createUploadValidator } = require('../validator');
 
-// router.get('/uploads', getuploads);
+ const { requireSignin } = require('../controllers/auth');
+ const { userById, userPhoto } = require('../controllers/user');
+ const { createPostValidator } = require('../validator');
 
-// router.post('/upload/new/:uploadId', createupload, createUploadValidator);
+const router = express.Router();
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-    cb(null, 'public')
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' +file.originalname )
-  }
-})
+router.get('/uploads', getUploads);
 
-const upload = multer({ storage: storage }).single('file')
+// like unlike
+router.put('/upload/like', requireSignin, like);
+router.put('/upload/unlike', requireSignin, unlike);
 
-router.post('/upload', requireSignin, uploadFile);
+// comments
+router.put('/upload/comment', requireSignin, comment);
+router.put('/upload/uncomment', requireSignin, uncomment);
+router.put('/upload/updatecomment', requireSignin, updateComment);
 
-// router.param('uploadId', uploadById);
+// upload routes
+router.post('/upload/new/:userId', requireSignin, createUpload);
+router.get('/uploads/by/:userId', requireSignin, uploadsByUser);
+router.get('/upload/:uploadId', singleUpload);
+router.put('/upload/:uploadId', requireSignin, isUploader, updateUpload);
+router.delete('/upload/:uploadId', requireSignin, isUploader, deleteUpload);
+
+//uploads
+// router.upload('/upload', uploader)
+
+// photo
+router.get('/upload/photo/:uploadId', photo, userPhoto);
+
+// any route containing :userId, our app will first execute userById()
+router.param('userId', userById);
+// any route containing :uploadId, our app will first execute uploadById()
+router.param('uploadId', uploadById);
 
 module.exports = router;

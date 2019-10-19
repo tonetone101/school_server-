@@ -79,7 +79,7 @@ exports.createPost = (req, res, next) => {
         post.postedBy = req.profile;
 
         if (files.photo) {
-            post.photo.data = fs.readFileSync(files.photo.path);
+            post.photo.data = fs.readFileSync(files.photo.path, 'utf8');
             post.photo.contentType = files.photo.type;
         }
         post.save((err, result) => {
