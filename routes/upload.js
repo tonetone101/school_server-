@@ -22,7 +22,7 @@ const {
 
 const router = express.Router();
 
-router.get('/uploads', getUploads);
+router.get('/uploads', getUploads)
 
 // like unlike
 router.put('/upload/like', requireSignin, like);
@@ -38,10 +38,8 @@ router.post('/upload/new/:userId', requireSignin, createUpload);
 router.get('/uploads/by/:userId', requireSignin, uploadsByUser);
 router.get('/upload/:uploadId', singleUpload);
 router.put('/upload/:uploadId', requireSignin, isUploader, updateUpload);
-router.delete('/upload/:uploadId', requireSignin, isUploader, deleteUpload);
+router.delete('/upload/:uploadId', requireSignin, isUploader, deleteUpload)
 
-//uploads
-// router.upload('/upload', uploader)
 
 // photo
 router.get('/upload/photo/:uploadId', photo, userPhoto);

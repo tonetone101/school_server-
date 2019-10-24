@@ -79,7 +79,7 @@ exports.createUpload = (req, res, next) => {
         upload.uploadedBy = req.profile;
 
         if (files.photo) {
-            upload.photo.data = fs.readFileSync(files.photo.path, 'utf8');
+            upload.photo.data = fs.readFileSync(files.photo.path);
             upload.photo.contentType = files.photo.type;
         }
         upload.save((err, result) => {
