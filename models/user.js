@@ -25,10 +25,6 @@ const userSchema = new mongoose.Schema({
         trim: true,
     },
     salt: String,
-    role: {
-        type: Number,
-        default: 0
-    },
     created: {
         type: Date,
         default: Date.now
@@ -40,9 +36,17 @@ const userSchema = new mongoose.Schema({
    upload: [{
     data: Buffer,
     contentType: String
-}],
+    }],
    following: [{type: ObjectId, ref: "User"}],
    followers: [{type: ObjectId, ref: "User"}],
+   resetPasswordLink: {
+    data: String,
+    default: ''
+},
+role: {
+    type: String,
+    default: 'student'
+},
 
 }, 
 {timestamps: true}

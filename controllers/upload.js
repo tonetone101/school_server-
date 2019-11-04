@@ -31,6 +31,9 @@ exports.getUploads = (req, res) => {
         .then(uploads => {
             res.json(uploads);
         })
+        .then(uploads => {
+            res.download(uploads)
+        })
         .catch(err => console.log(err));
 };
 
@@ -185,6 +188,7 @@ exports.deleteUpload = (req, res) => {
 
 exports.photo = (req, res, next) => {
     res.set('Content-Type', req.upload.photo.contentType);
+    
     return res.send(req.upload.photo.data);
 };
 

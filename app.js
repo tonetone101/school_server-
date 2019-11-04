@@ -49,7 +49,7 @@ app.use(cors())
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', postRoutes);
-app.use('/api', uploadRoutes);
+app.use('/api', uploadRoutes)
 
 // app.get('/uploads/view', (req, res) => {
 //     res.sendFile("index.html", { root: path.join(__dirname, 'public') })
