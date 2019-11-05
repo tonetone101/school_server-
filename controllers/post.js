@@ -23,7 +23,7 @@ exports.postById = (req, res, next, id) => {
 
 exports.getPosts = (req, res) => {
     const posts = Post.find()
-        .populate("postedBy", "_id name photo")
+        .populate("postedBy", "_id name photo role")
         .populate("comments", "text created")
         .populate("comments.postedBy", "_id name")
         .select("_id title body created likes")
@@ -112,8 +112,8 @@ exports.isPoster = (req, res, next) => {
     let sameUser = req.post && req.auth && req.post.postedBy._id == req.auth._id;
     let adminUser = req.post && req.auth && req.auth.role === 'admin';
 
-    // console.log("req.post ", req.post, " req.auth ", req.auth);
-    // console.log("SAMEUSER: ", sameUser, " ADMINUSER: ", adminUser);
+    console.log("req.post ", req.post, " req.auth ", req.auth);
+    console.log("SAMEUSER: ", sameUser, " ADMINUSER: ", adminUser);
 
     let isPoster = sameUser || adminUser;
 

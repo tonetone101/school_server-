@@ -16,8 +16,8 @@ router.put('/user/unfollow', requireSignin, removeFollowing, removeFollower)
 
 router.get('/users', allUsers) // to see all users
 router.get('/user/:userId', requireSignin, getUser) // to see single user
-router.put('/user/:userId', requireSignin, isAuth, updateUser) // to update
-router.delete('/user/:userId', requireSignin, isAuth, deleteUser) // to deletes
+router.put('/user/:userId', requireSignin, hasAuthorization, updateUser) // to update
+router.delete('/user/:userId', requireSignin, hasAuthorization, deleteUser) // to deletes
 
 //photo
 router.get('/user/photo/:userId', userPhoto)

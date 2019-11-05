@@ -26,8 +26,8 @@ exports.hasAuthorization = (req, res, next) => {
 
     const authorized = sameUser || adminUser;
 
-    // console.log("req.profile ", req.profile, " req.auth ", req.auth);
-    // console.log("SAMEUSER", sameUser, "ADMINUSER", adminUser);
+     console.log("req.profile ", req.profile, " req.auth ", req.auth);
+     console.log("SAMEUSER", sameUser, "ADMINUSER", adminUser);
 
     if (!authorized) {
         return res.status(403).json({
