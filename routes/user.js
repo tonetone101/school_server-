@@ -14,6 +14,8 @@ const {requireSignin, isAuth, isAdmin } = require('../controllers/auth');
 router.put('/user/follow', requireSignin, addFollowing, addFollower)
 router.put('/user/unfollow', requireSignin, removeFollowing, removeFollower)
 
+router.post('/user/group/:userId', )
+
 router.get('/users', allUsers) // to see all users
 router.get('/user/:userId', requireSignin, getUser) // to see single user
 router.put('/user/:userId', requireSignin, hasAuthorization, updateUser) // to update

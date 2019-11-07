@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const uuidv1 = require('uuid/v1');
+const Post = require('./post')
 const {ObjectId} = mongoose.Schema
 
 const userSchema = new mongoose.Schema({
@@ -36,6 +37,9 @@ const userSchema = new mongoose.Schema({
    upload: [{
     data: Buffer,
     contentType: String
+    }],
+    group: [{
+        type: ObjectId, ref: "User"
     }],
    following: [{type: ObjectId, ref: "User"}],
    followers: [{type: ObjectId, ref: "User"}],
@@ -82,6 +86,12 @@ userSchema.methods = {
         }
     }
 }
+
+userSchema.pre('remove', function(next) {
+    Post.remove({postedBy: this._id}).exec();
+    next()
+})
+
 
 module.exports = mongoose.model("User", userSchema);
 

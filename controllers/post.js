@@ -34,6 +34,22 @@ exports.getPosts = (req, res) => {
         .catch(err => console.log(err));
 };
 
+exports.postsForTimeline = (req, res) => {
+    let following = req.profile.following
+    following.push(req.profile._id)
+    Post.find({postedBy: { $in: req.profile.following}})
+    .populate('comments', 'text created')
+    .populate('comments.postedBy', '_id name')
+    .populate('postedBy', '_id name')
+    .sort('-created')
+    .exec((err, posts) => {
+        if(err) {
+           console.log(err)
+        }
+        res.json(posts)
+    })
+}
+
 
 // with pagination
 // exports.getPosts = async (req, res) => {
@@ -309,45 +325,4 @@ exports.updateComment = (req, res) => {
     });
 };
 
-/*
 
-// update commennt by Alaki
-exports.updateComment = async (req, res) => {
-  const commentId = req.body.id;
-  const comment = req.body.comment;
- 
-  const updatedComment = await Post.updateOne(
-    { comments: { $elemMatch: { _id: commentId } } },
-    { $set: { "comments.$.text": comment } }
-  );
-  if (!updatedComment)
-    res.status(404).json({ message: Language.fa.NoPostFound });
- 
-  res.json(updatedComment);
-};
-
-// update commennt with auth
-exports.updateComment = async (req, res) => {
-  const commentId = req.body.id;
-  const comment = req.body.comment;
-  const postId = req.params.id;
- 
-  const post = await Post.findById(postId);
-  const com = post.comments.map(comment => comment.id).indexOf(commentId);
-  const singleComment = post.comments.splice(com, 1);
-  let authorized = singleComment[0].commentedBy;
-  console.log("Security Check Passed ?", req.auth._id == authorized);
- 
-  if (authorized != req.auth._id)
-    res.status(401).json({ mesage: Language.fa.UnAuthorized });
- 
-  const updatedComment = await Post.updateOne(
-    { comments: { $elemMatch: { _id: commentId } } },
-    { $set: { "comments.$.text": comment } }
-  );
-  if (!updatedComment)
-    res.status(404).json({ message: Language.fr.NoPostFound });
- 
-  res.json({ message: Language.fr.CommentUpdated });
-};
- */

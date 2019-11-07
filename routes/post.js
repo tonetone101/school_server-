@@ -13,7 +13,8 @@ const {
     unlike,
     comment,
     uncomment,
-    updateComment
+    updateComment,
+    postsForTimeline
 } = require('../controllers/post');
 
 const { requireSignin } = require('../controllers/auth');
@@ -22,7 +23,7 @@ const { createPostValidator } = require('../validator');
 
 const router = express.Router();
 
-router.get('/posts', getPosts);
+router.get('/posts', getPosts, postsForTimeline);
 
 // like unlike
 router.put('/post/like', requireSignin, like);

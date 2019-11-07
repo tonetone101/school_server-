@@ -6,7 +6,6 @@ const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const fs = require('fs')
-const multer = require('multer')
 const path = require('path')
 require('dotenv').config();
 
@@ -42,7 +41,6 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(expressValidator())
 app.use(cors())
-
 
 
 //routes middleware

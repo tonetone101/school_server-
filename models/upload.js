@@ -8,7 +8,11 @@ const uploadSchema = new mongoose.Schema({
     },
     body: {
         type: String,
-        required: true,
+      
+    },
+    url: {
+        type: String,
+        require: true
     },
     photo: {
         data: Buffer,

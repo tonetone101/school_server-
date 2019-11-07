@@ -8,7 +8,7 @@ exports.uploadById = (req, res, next, id) => {
         .populate('uploadedBy', '_id name')
         .populate('comments.uploadedBy', '_id name')
         .populate('uploadedBy', '_id name role')
-        .select('_id title body created likes comments photo')
+        .select('_id title body url created likes comments photo')
         .exec((err, upload) => {
             if (err || !upload) {
                 return res.status(400).json({
@@ -26,7 +26,7 @@ exports.getUploads = (req, res) => {
         .populate("uploadedBy", "_id name photo")
         .populate("comments", "text created")
         .populate("comments.uploadedBy", "_id name")
-        .select("_id title body created likes")
+        .select("_id title url body created likes")
         .sort({ created: -1 })
         .then(uploads => {
             res.json(uploads);
@@ -99,7 +99,7 @@ exports.createUpload = (req, res, next) => {
 exports.uploadsByUser = (req, res) => {
     Upload.find({ uploadedBy: req.profile._id })
         .populate('uploadedBy', '_id name')
-        .select('_id title body created likes')
+        .select('_id title body url created likes')
         .sort('_created')
         .exec((err, uploads) => {
             if (err) {

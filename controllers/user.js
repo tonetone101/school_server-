@@ -137,6 +137,7 @@ exports.addFollowing = (req, res, next) => {
     });
 };
 
+
 exports.addFollower = (req, res) => {
     User.findByIdAndUpdate(req.body.followId, { $push: { followers: req.body.userId } }, { new: true })
         .populate('following', '_id name')
@@ -192,28 +193,6 @@ exports.findPeople = (req, res) => {
     }).select('name');
 };
 
-// // file
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//     cb(null, 'public')
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + '-' +file.originalname )
-//   }
-// })
-
-// const upload = multer({ storage: storage }).single('file')
-
-// exports.upload = function(req, res) {
-     
-//     upload(req, res, function (err) {
-//            if (err instanceof multer.MulterError) {
-//                return res.status(500).json(err)
-//            } else if (err) {
-//                return res.status(500).json(err)
-//            }
-//       return res.status(200).send(req.file)
-
-//     })
-
+// exports.createGroup = (req, res) => {
+    
 // }
