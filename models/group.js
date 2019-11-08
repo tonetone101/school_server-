@@ -2,14 +2,27 @@ const mongoose = require('mongoose');
 const {ObjectId} = mongoose.Schema
 
 const groupSchema = new mongoose.Schema({
-  groupname: {
+  name: {
       type: String,
       required: true
   },
-  missionstatement: {
+  mission: {
       type: String,
       require: true
   },
+  created: {
+    type: Date,
+    default: Date.now
+  },
+  photo: {
+    data: Buffer,
+    contentType: String
+  },
+  members: [{type: ObjectId, ref: "User"}],
+  createdBy: {
+    type: ObjectId,
+    ref: 'User'
+  }
 
 })
 

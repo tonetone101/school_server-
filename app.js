@@ -6,7 +6,7 @@ const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const fs = require('fs')
-const path = require('path')
+
 require('dotenv').config();
 
 
@@ -16,6 +16,8 @@ const authRoutes = require('./routes/auth');
 //user routes
 const userRoutes = require('./routes/user');
 
+//group routes
+const groupRoutes = require('./routes/group');
 
 //post routes
 const postRoutes = require('./routes/post');
@@ -33,7 +35,16 @@ mongoose.connect(process.env.DATABASE, {
     useUnifiedTopology: true
 }).then(() => console.log('DB connected'))
 
-
+// const uri = 'mongodb+srv://keoantonio1@gmail.com:Jayna998@cluster0-xzbe6.mongodb.net/test?retryWrites=true&w=majority'
+// MongoClient.connect(uri, function(err, client) {
+//     if(err) {
+//         console.log('Error!!', err)
+//     }
+//     else 
+//     console.log(client)
+//     // const collection = client.db('test').collection('devices')
+//     // client.close()
+// })
 
 //middlewares
 app.use(morgan('dev'))
@@ -43,11 +54,13 @@ app.use(expressValidator())
 app.use(cors())
 
 
+
 //routes middleware
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', postRoutes);
-app.use('/api', uploadRoutes)
+app.use('/api', uploadRoutes);
+app.use('/api', groupRoutes);
 
 // app.get('/uploads/view', (req, res) => {
 //     res.sendFile("index.html", { root: path.join(__dirname, 'public') })
@@ -80,7 +93,7 @@ app.use(function (err, req, res, next) {
 
 
 
-const port = process.env.PORT || 8000
+const port = 8000
 
 app.listen(port, () => {
     console.log(` Server is running on port ${port}`)

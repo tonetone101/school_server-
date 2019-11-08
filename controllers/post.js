@@ -80,6 +80,7 @@ exports.postsForTimeline = (req, res) => {
 // };
 
 exports.createPost = (req, res, next) => {
+    console.log(req)
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
     form.parse(req, (err, fields, files) => {
@@ -87,13 +88,13 @@ exports.createPost = (req, res, next) => {
             return res.status(400).json({
                 error: 'Image could not be uploaded'
             });
-        }
+        };
         let post = new Post(fields);
 
         req.profile.hashed_password = undefined;
         req.profile.salt = undefined;
         post.postedBy = req.profile;
-
+        console.log(post)
         if (files.photo) {
             post.photo.data = fs.readFileSync(files.photo.path, 'utf8');
             post.photo.contentType = files.photo.type;

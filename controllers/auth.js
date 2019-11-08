@@ -18,6 +18,16 @@ exports.signup = async (req, res) => {
     res.status(200).json({ message: 'Signup success! Please login.' });
 };
 
+// // join group
+// exports.joingroup = async (req, res) => {
+//     const user = await User.findOne({
+//         email: req.body.email
+//     })
+//     if (user) {
+//         const newMember = await 
+//     }
+// }
+
 // to signin user
 exports.signin = (req, res) => {
     // find the user based on email

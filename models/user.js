@@ -34,12 +34,8 @@ const userSchema = new mongoose.Schema({
        data: Buffer,
        contentType: String
    },
-   upload: [{
-    data: Buffer,
-    contentType: String
-    }],
     group: [{
-        type: ObjectId, ref: "User"
+        type: ObjectId, ref: "Group"
     }],
    following: [{type: ObjectId, ref: "User"}],
    followers: [{type: ObjectId, ref: "User"}],
