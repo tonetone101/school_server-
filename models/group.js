@@ -19,6 +19,19 @@ const groupSchema = new mongoose.Schema({
     contentType: String
   },
   members: [{type: ObjectId, ref: "User"}],
+  posts: [
+    {
+        text: String,
+        created: {
+            type: Date,
+            default: Date.now
+        },
+        postedBy: {
+            type: ObjectId,
+            ref: 'User'
+        }
+    }
+],
   createdBy: {
     type: ObjectId,
     ref: 'User'

@@ -9,6 +9,7 @@ exports.userById = (req, res, next, id) => {
         // populate followers and following users array
         .populate('following', '_id name')
         .populate('followers', '_id name')
+        .populate('group', '_id name')
         .exec((err, user) => {
             if (err || !user) {
                 return res.status(400).json({
@@ -193,6 +194,28 @@ exports.findPeople = (req, res) => {
     }).select('name');
 };
 
-// exports.createGroup = (req, res) => {
-    
-// }
+exports.joinGroup = (req, res, next) => {
+    User.findByIdAndUpdate(req.body.userId, {$push: {
+        group: req.body.groupId
+    }},
+       (err, result) => {
+           if (err) {
+               return res.status(400).json({error: err})
+           }
+           next()
+       } 
+    )
+}
+
+exports.leaveGroup = (req, res) => {
+    User.findByIdAndUpdate(req.body.userId, {$pull: {
+        group: req.body.groupId
+    }},
+       (err, result) => {
+           if (err) {
+               return res.status(400).json({error: err})
+           }
+           next()
+       } 
+    )
+}

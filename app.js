@@ -5,6 +5,7 @@ const expressValidator = require('express-validator')
 const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
+const MongoClient = require('mongodb')
 const fs = require('fs')
 
 require('dotenv').config();
@@ -35,15 +36,15 @@ mongoose.connect(process.env.DATABASE, {
     useUnifiedTopology: true
 }).then(() => console.log('DB connected'))
 
-// const uri = 'mongodb+srv://keoantonio1@gmail.com:Jayna998@cluster0-xzbe6.mongodb.net/test?retryWrites=true&w=majority'
+// const uri = 'mongodb+srv://Antkeo:Jayna998@cluster0-zsjjd.mongodb.net/test?retryWrites=true&w=majority'
 // MongoClient.connect(uri, function(err, client) {
 //     if(err) {
 //         console.log('Error!!', err)
 //     }
 //     else 
-//     console.log(client)
-//     // const collection = client.db('test').collection('devices')
-//     // client.close()
+//     console.log('DB connect...')
+//     const collection = client.db('test').collection('devices')
+//     client.close()
 // })
 
 //middlewares
