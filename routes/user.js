@@ -15,6 +15,7 @@ router.put('/user/follow', requireSignin, addFollowing, addFollower)
 router.put('/user/unfollow', requireSignin, removeFollowing, removeFollower)
 router.put('/user/group', requireSignin, )
 
+// group routes for user
 router.put('/user/join-group/:userId', requireSignin, joinGroup)
 router.put('/user/leave-group/:userId', requireSignin, leaveGroup)
 

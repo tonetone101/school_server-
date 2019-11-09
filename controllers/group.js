@@ -1,5 +1,7 @@
 const Group = require('../models/group');
-const User = require("../models/user");
+const formidable = require('formidable');
+const fs = require('fs');
+const _ = require('lodash');
 
 // to find group by ID
 exports.groupById = (req, res, next, id) => {
@@ -19,12 +21,26 @@ exports.groupById = (req, res, next, id) => {
         });
 };
 
-exports.createGroup = (req, res, next) => {  
-        let group = new Group(req.body);       
+exports.createGroup = (req, res, next) => {
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req, (err, fields, files) => {
+        console.log(fields)
+        if (err) {
+            return res.status(400).json({
+                error: 'Image could not be uploaded'
+            });
+        };
+        
+        let group = new Group(fields);
+
         req.profile.hashed_password = undefined;
         req.profile.salt = undefined;
         group.createdBy = req.profile;
-
+        if (files.photo) {
+            group.photo.data = fs.readFileSync(files.photo.path, 'utf8');
+            group.photo.contentType = files.photo.type;
+        }
         group.save((err, result) => {
             if (err) {
                 return res.status(400).json({
@@ -33,7 +49,8 @@ exports.createGroup = (req, res, next) => {
             }
             res.json(result);
         });
-}
+    });
+};
 
 //get single group
 exports.singleGroup = (req, res) => {
@@ -87,16 +104,32 @@ exports.groupsByUser = (req, res) => {
 
 //update group information
 exports.updateGroup = (req, res, next) => {
-    let group = req.group;
-    group = _.extend(group, req.body);
-    group.updated = Date.now();
-    group.save(err => {
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req, (err, fields, files) => {
         if (err) {
             return res.status(400).json({
-                error: err
+                error: 'Photo could not be uploaded'
             });
         }
-        res.json(group);
+        // save post
+        let group = req.group;
+        group = _.extend(group, fields);
+        group.updated = Date.now();
+
+        if (files.photo) {
+            post.photo.data = fs.readFileSync(files.photo.path);
+            post.photo.contentType = files.photo.type;
+        }
+
+        group.save((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            }
+            res.json(group);
+        });
     });
 };
 
@@ -133,4 +166,9 @@ exports.groupAdmin = (req, res, next) => {
         });
     }
     next();
+};
+
+exports.photo = (req, res, next) => {
+    res.set('Content-Type', req.group.photo.contentType);
+    return res.send(req.group.photo.data);
 };
