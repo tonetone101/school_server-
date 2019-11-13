@@ -19,15 +19,13 @@ router.put('/user/unfollow', requireSignin, removeFollowing, removeFollower)
 router.get('/user/photo/:userId', userPhoto)
 
 // group routes for user
-router.put('/user/joingroup', requireSignin, addMember, joinGroup)
-router.put('/user/leavegroup', requireSignin, removeMember, leaveGroup)
+router.put('/user/joingroup', requireSignin, joinGroup, addMember)
+router.put('/user/leavegroup', requireSignin, leaveGroup, removeMember )
 
 router.get('/users', allUsers) // to see all users
 router.get('/user/:userId', requireSignin, getUser) // to see single user
 router.put('/user/:userId', requireSignin, hasAuthorization, updateUser) // to update
 router.delete('/user/:userId', requireSignin, hasAuthorization, deleteUser) // to deletes
-
-
 
 // suggested followers
 router.get('/user/findpeople/:userId', requireSignin, findPeople)

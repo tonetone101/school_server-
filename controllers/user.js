@@ -182,7 +182,7 @@ exports.findPeople = (req, res) => {
 exports.joinGroup = (req, res, next) => {
     User.findByIdAndUpdate(req.body.userId, {$push: {
         group: req.body.groupId
-    }},
+    }}, {new: true},
        (err, result) => {
            if (err) {
                return res.status(400).json({error: err})
@@ -193,7 +193,7 @@ exports.joinGroup = (req, res, next) => {
 }
 
 // unfollow group
-exports.leaveGroup = (req, res) => {
+exports.leaveGroup = (req, res, next) => {
     User.findByIdAndUpdate(req.body.userId, {$pull: {
         group: req.body.groupId
     }},

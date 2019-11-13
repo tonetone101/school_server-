@@ -87,18 +87,34 @@ exports.removeMember = (req, res) => {
 };
 
 // to add member to group
-exports.addMember = (req, res, next) => {
-    Group.findByIdAndUpdate(req.body.groupId, {$push: {
-        members: req.body.userId
-    }}, {new: true},
-       (err, result) => {
-           if (err) {
-               return res.status(400).json({error: err})
-           }
-           next()
-       } 
-    )
-}
+exports.addMember = (req, res) => {
+    Group.findByIdAndUpdate(req.body.groupId, { $push: { members: req.body.userId } }, { new: true })
+        .populate('members', '_id name')
+        .exec((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            }
+            result.hashed_password = undefined;
+            result.salt = undefined;
+            res.json(result);
+        });
+};
+
+
+// exports.addMember = (req, res, next) => {
+//     Group.findByIdAndUpdate(req.body.groupId, {$push: {
+//         members: req.body.userId
+//     }},
+//        (err, result) => {
+//            if (err) {
+//                return res.status(400).json({error: err})
+//            }
+//            next()
+//        } 
+//     )
+// }
 
 // to find all groups that user created
 exports.groupsByUser = (req, res) => {
