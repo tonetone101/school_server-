@@ -10,14 +10,15 @@ const {userById,
         findPeople, joinGroup,
         leaveGroup, hasAuthorization } = require('../controllers/user');
 const {requireSignin, isAuth, isAdmin } = require('../controllers/auth');
+const {removeMember, addMember} = require('../controllers/group');
 
 router.put('/user/follow', requireSignin, addFollowing, addFollower)
 router.put('/user/unfollow', requireSignin, removeFollowing, removeFollower)
-router.put('/user/group', requireSignin, )
+
 
 // group routes for user
-router.put('/user/join-group/:userId', requireSignin, joinGroup)
-router.put('/user/leave-group/:userId', requireSignin, leaveGroup)
+router.put('/user/joingroup', requireSignin, addMember, joinGroup)
+router.put('/user/leavegroup', requireSignin, removeMember, leaveGroup)
 
 router.get('/users', allUsers) // to see all users
 router.get('/user/:userId', requireSignin, getUser) // to see single user

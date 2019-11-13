@@ -21,7 +21,8 @@ exports.postById = (req, res, next, id) => {
 };
 
 
-exports.getPosts = (req, res) => {
+exports.getPosts = (req, res, next) => {
+    
     const posts = Post.find()
         .populate("postedBy", "_id name photo role")
         .populate("comments", "text created")
@@ -36,6 +37,7 @@ exports.getPosts = (req, res) => {
 
 exports.postsForTimeline = (req, res) => {
     let following = req.profile.following
+    console.log(following)
     following.push(req.profile._id)
     Post.find({postedBy: { $in: req.profile.following}})
     .populate('comments', 'text created')

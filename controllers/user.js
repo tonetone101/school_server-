@@ -2,7 +2,6 @@ const _ = require('lodash');
 const User = require('../models/user');
 const formidable = require('formidable');
 const fs = require('fs');
-const multer = require('multer')
 
 exports.userById = (req, res, next, id) => {
     User.findById(id)
@@ -10,6 +9,7 @@ exports.userById = (req, res, next, id) => {
         .populate('following', '_id name')
         .populate('followers', '_id name')
         .populate('group', '_id name')
+        .select('_id name group')
         .exec((err, user) => {
             if (err || !user) {
                 return res.status(400).json({
@@ -46,7 +46,7 @@ exports.allUsers = (req, res) => {
             });
         }
         res.json(users);
-    }).select('name email updated created role');
+    }).select('name email updated created role group');
 };
 
 exports.getUser = (req, res) => {
@@ -194,6 +194,7 @@ exports.findPeople = (req, res) => {
     }).select('name');
 };
 
+// to follow group
 exports.joinGroup = (req, res, next) => {
     User.findByIdAndUpdate(req.body.userId, {$push: {
         group: req.body.groupId
@@ -207,6 +208,7 @@ exports.joinGroup = (req, res, next) => {
     )
 }
 
+// unfollow group
 exports.leaveGroup = (req, res) => {
     User.findByIdAndUpdate(req.body.userId, {$pull: {
         group: req.body.groupId

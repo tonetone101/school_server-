@@ -30,6 +30,7 @@ const uploadRoutes = require('./routes/upload');
 const app = express();
 
 //db
+const uri = 'mongodb+srv://Antkeo:Jayna998@cluster0-zsjjd.mongodb.net/test?retryWrites=true&w=majority'
 mongoose.connect(process.env.DATABASE, {
    useNewUrlParser: true,
     useCreateIndex: true,
@@ -37,14 +38,15 @@ mongoose.connect(process.env.DATABASE, {
 }).then(() => console.log('DB connected'))
 
 // const uri = 'mongodb+srv://Antkeo:Jayna998@cluster0-zsjjd.mongodb.net/test?retryWrites=true&w=majority'
-// MongoClient.connect(uri, function(err, client) {
-//     if(err) {
-//         console.log('Error!!', err)
-//     }
-//     else 
-//     console.log('DB connect...')
-//     const collection = client.db('test').collection('devices')
-//     client.close()
+// MongoClient.connect(uri, (err, client) => {
+//     console.log(err)
+//     // if(err) {
+//     //     console.log('Error!!', err)
+//     // }
+//     // else 
+//     // console.log('DB connect...')
+//     // const collection = client.db('test').collection('devices')
+//     // client.close()
 // })
 
 //middlewares

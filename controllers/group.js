@@ -86,6 +86,20 @@ exports.removeMember = (req, res) => {
         });
 };
 
+// to add member to group
+exports.addMember = (req, res, next) => {
+    Group.findByIdAndUpdate(req.body.groupId, {$push: {
+        members: req.body.userId
+    }}, {new: true},
+       (err, result) => {
+           if (err) {
+               return res.status(400).json({error: err})
+           }
+           next()
+       } 
+    )
+}
+
 // to find all groups that user created
 exports.groupsByUser = (req, res) => {
     Group.find({ createdBy: req.profile._id })
