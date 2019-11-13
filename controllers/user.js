@@ -9,7 +9,7 @@ exports.userById = (req, res, next, id) => {
         .populate('following', '_id name')
         .populate('followers', '_id name')
         .populate('group', '_id name')
-        .select('_id name group')
+        .select('_id name email created group photo role')
         .exec((err, user) => {
             if (err || !user) {
                 return res.status(400).json({
@@ -46,7 +46,7 @@ exports.allUsers = (req, res) => {
             });
         }
         res.json(users);
-    }).select('name email updated created role group');
+    }).select('name email photo created role group');
 };
 
 exports.getUser = (req, res) => {
@@ -54,22 +54,6 @@ exports.getUser = (req, res) => {
     req.profile.salt = undefined;
     return res.json(req.profile);
 };
-
-// exports.updateUser = (req, res, next) => {
-//     let user = req.profile;
-//     user = _.extend(user, req.body); // extend - mutate the source object
-//     user.updated = Date.now();
-//     user.save(err => {
-//         if (err) {
-//             return res.status(400).json({
-//                 error: "You are not authorized to perform this action"
-//             });
-//         }
-//         user.hashed_password = undefined;
-//         user.salt = undefined;
-//         res.json({ user });
-//     });
-// };
 
 exports.updateUser = (req, res, next) => {
     let form = new formidable.IncomingForm();
@@ -113,7 +97,7 @@ exports.userPhoto = (req, res, next) => {
         res.set(('Content-Type', req.profile.photo.contentType));
         return res.send(req.profile.photo.data);
     }
-    next();
+     next();
 };
 
 exports.deleteUser = (req, res, next) => {

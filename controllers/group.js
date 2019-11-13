@@ -182,7 +182,7 @@ exports.groupAdmin = (req, res, next) => {
     next();
 };
 
-exports.photo = (req, res, next) => {
+exports.groupPhoto = (req, res, next) => {
     res.set('Content-Type', req.group.photo.contentType);
     return res.send(req.group.photo.data);
 };
