@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-    getPosts,
+   getPosts,
     createPost,
     postsByUser,
     postById,
@@ -18,12 +18,12 @@ const {
 } = require('../controllers/post');
 
 const { requireSignin } = require('../controllers/auth');
-const { userById, userPhoto } = require('../controllers/user');
+const { userById, userPhoto,  } = require('../controllers/user');
 const { createPostValidator } = require('../validator');
 
 const router = express.Router();
 
-router.get('/posts', getPosts);
+router.get('/posts/:userId', userById, postsForTimeline);
 
 // like unlike
 router.put('/post/like', requireSignin, like);

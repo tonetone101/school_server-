@@ -22,24 +22,25 @@ exports.postById = (req, res, next, id) => {
 
 
 exports.getPosts = (req, res, next) => {
-    
+   
     const posts = Post.find()
-        .populate("postedBy", "_id name photo role")
+        .populate("postedBy", "_id name photo role followers following")
         .populate("comments", "text created")
         .populate("comments.postedBy", "_id name")
         .select("_id title body created likes")
         .sort({ created: -1 })
         .then(posts => {
-            res.json(posts);
+           res.json(posts)
         })
         .catch(err => console.log(err));
+      
 };
 
 exports.postsForTimeline = (req, res) => {
     let following = req.profile.following
     console.log(following)
     following.push(req.profile._id)
-    Post.find({postedBy: { $in: req.profile.following}})
+    Post.find({postedBy: { $in: following}})
     .populate('comments', 'text created')
     .populate('comments.postedBy', '_id name')
     .populate('postedBy', '_id name')
@@ -49,6 +50,7 @@ exports.postsForTimeline = (req, res) => {
            console.log(err)
         }
         res.json(posts)
+        console.log(posts)
     })
 }
 
