@@ -9,8 +9,8 @@ exports.userById = (req, res, next, id) => {
         // populate followers and following users array
         .populate('following', '_id name')
         .populate('followers', '_id name')
-        .populate('group', '_id name')
-        .select('_id name email created group photo role')
+        .populate('group', '_id name mission members')
+        .select('_id name email created group photo about role')
         .exec((err, user) => {
             if (err || !user) {
                 return res.status(400).json({
@@ -65,7 +65,7 @@ exports.allUsers = (req, res) => {
             });
         }
         res.json(users);
-    }).select('name email photo created role group');
+    }).select('name email about photo created role group');
 };
 
 exports.getUser = (req, res) => {

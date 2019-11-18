@@ -17,6 +17,7 @@ const {
     postsForTimeline
 } = require('../controllers/post');
 
+const { groupById, postByMembers } = require('../controllers/group')
 const { requireSignin } = require('../controllers/auth');
 const { userById, userPhoto,  } = require('../controllers/user');
 const { createPostValidator } = require('../validator');
@@ -24,6 +25,7 @@ const { createPostValidator } = require('../validator');
 const router = express.Router();
 
 router.get('/posts/:userId', userById, postsForTimeline);
+router.get('/groups/:groupId', groupById, postByMembers);
 
 // like unlike
 router.put('/post/like', requireSignin, like);
@@ -49,5 +51,5 @@ router.get('/post/photo/:postId', photo);
 router.param('userId', userById);
 // any route containing :postId, our app will first execute postById()
 router.param('postId', postById);
-
+router.param('groupId', groupById);
 module.exports = router;

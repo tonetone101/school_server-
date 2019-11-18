@@ -1,4 +1,6 @@
 const Group = require('../models/group');
+const Post = require('../models/post');
+
 const formidable = require('formidable');
 const fs = require('fs');
 const _ = require('lodash');
@@ -20,6 +22,25 @@ exports.groupById = (req, res, next, id) => {
             next();
         });
 };
+
+exports.postByMembers = (req, res) => {
+    let members = req.group.members
+    console.log(members)
+    members.push(req.group._id)
+    Post.find({postedBy: { $in: members}})
+    .populate('comments', 'text created')
+    .populate('comments.postedBy', '_id name')
+    .populate('postedBy', '_id name')
+    .sort('-created')
+    .exec((err, posts) => {
+        console.log(posts)
+        if(err) {
+           console.log(err)
+        }
+        res.json(posts)
+        console.log(posts)
+    })
+}
 
 exports.createGroup = (req, res, next) => {
     let form = new formidable.IncomingForm();
@@ -202,3 +223,4 @@ exports.groupPhoto = (req, res, next) => {
     res.set('Content-Type', req.group.photo.contentType);
     return res.send(req.group.photo.data);
 };
+
