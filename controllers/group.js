@@ -224,3 +224,38 @@ exports.groupPhoto = (req, res, next) => {
     return res.send(req.group.photo.data);
 };
 
+//group post
+exports.groupPost = (req, res) => {
+    let post = req.body.post;
+    post.postedBy = req.body.userId;
+
+    Group.findByIdAndUpdate(req.body.groupId, { $push: { posts: post } }, { new: true })
+        .populate('posts.postedBy', '_id name')
+        .populate('postedBy', '_id name')
+        .exec((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            } else {
+                res.json(result);
+            }
+        });
+};
+
+exports.unGroupPost = (req, res) => {
+    let post = req.body.post;
+
+    Group.findByIdAndUpdate(req.body.groupId, { $pull: { posts: { _id: post._id } } }, { new: true })
+        .populate('posts.postedBy', '_id name')
+        .populate('postedBy', '_id name')
+        .exec((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            } else {
+                res.json(result);
+            }
+        });
+};

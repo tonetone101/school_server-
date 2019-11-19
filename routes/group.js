@@ -5,7 +5,8 @@ const {createGroup, getGroups,
         removeMember, groupById, 
         deleteGroup, updateGroup,
         groupsByUser, singleGroup,
-        groupAdmin, groupPhoto
+        groupAdmin, groupPhoto, 
+        groupPost, unGroupPost
     } = require('../controllers/group');
     const { userById, userPhoto } = require('../controllers/user');
 const { requireSignin } = require('../controllers/auth');
@@ -15,10 +16,13 @@ router.get('/groups', getGroups)
 
 router.post('/group/new/:userId', requireSignin, createGroup, createGroupValidator);
 router.put('/group/remove/:groupId', requireSignin, removeMember)
-router.get('/groups/by/:userId', requireSignin, groupsByUser);
+router.get('/groups/by/:userId', groupsByUser);
 router.get('/group/:groupId', singleGroup);
 router.put('/group/:groupId', requireSignin, groupAdmin, updateGroup);
 router.delete('/group/:groupId', requireSignin, groupAdmin, deleteGroup);
+
+router.put('/group/post', requireSignin, groupPost);
+router.put('/group/unpost', requireSignin, unGroupPost);
 
 router.get('/group/photo/:groupId', groupPhoto);
 
