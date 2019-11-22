@@ -9,6 +9,7 @@ const _ = require('lodash');
 exports.groupById = (req, res, next, id) => {
     Group.findById(id)
         .populate('createdBy', '_id name')
+        .populate('comments.postedBy', '_id name')
         .populate('members', '_id name')
         .populate('createdBy', '_id name role')
         .select('_id name mission created members photo')
@@ -82,6 +83,7 @@ exports.singleGroup = (req, res) => {
 exports.getGroups = (req, res) => {
     console.log(req.body)
     const groups = Group.find()
+         .populate("comments", "text created")
         .populate("createdBy", "_id name photo role")
         .select("_id name mission createdBy ")
         .sort({ created: -1 })
@@ -224,13 +226,13 @@ exports.groupPhoto = (req, res, next) => {
     return res.send(req.group.photo.data);
 };
 
-//group post
-exports.groupPost = (req, res) => {
-    let post = req.body.post;
-    post.postedBy = req.body.userId;
+//group comment
+exports.comment = (req, res) => {
+    let comment = req.body.comment;
+    comment.postedBy = req.body.userId;
 
-    Group.findByIdAndUpdate(req.body.groupId, { $push: { posts: post } }, { new: true })
-        .populate('posts.postedBy', '_id name')
+    Group.findByIdAndUpdate(req.body.groupId, { $push: { comments: comment } }, { new: true })
+        .populate('comments.postedBy', '_id name')
         .populate('postedBy', '_id name')
         .exec((err, result) => {
             if (err) {
@@ -243,11 +245,11 @@ exports.groupPost = (req, res) => {
         });
 };
 
-exports.unGroupPost = (req, res) => {
-    let post = req.body.post;
+exports.uncomment = (req, res) => {
+    let comment = req.body.comment;
 
-    Group.findByIdAndUpdate(req.body.groupId, { $pull: { posts: { _id: post._id } } }, { new: true })
-        .populate('posts.postedBy', '_id name')
+    Group.findByIdAndUpdate(req.body.groupId, { $pull: { comments: { _id: comment._id } } }, { new: true })
+        .populate('comments.postedBy', '_id name')
         .populate('postedBy', '_id name')
         .exec((err, result) => {
             if (err) {

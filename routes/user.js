@@ -19,7 +19,7 @@ router.put('/user/unfollow', requireSignin, removeFollowing, removeFollower)
 router.get('/user/photo/:userId', userPhoto)
 
 // group routes for user
-router.put('/user/joingroup', requireSignin, joinGroup, addMember)
+router.put('/user/new/joingroup', requireSignin, joinGroup, addMember)
 router.put('/user/leavegroup', requireSignin, leaveGroup, removeMember )
 
 router.get('/users', allUsers) // to see all users

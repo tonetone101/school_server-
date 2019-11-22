@@ -19,7 +19,7 @@ const groupSchema = new mongoose.Schema({
     contentType: String
   },
   members: [{type: ObjectId, ref: "User"}],
-  posts: [
+  comments: [
     {
         text: String,
         created: {

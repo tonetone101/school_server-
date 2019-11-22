@@ -199,10 +199,7 @@ exports.findPeople = (req, res) => {
 
 // to follow group
 exports.joinGroup = (req, res, next) => {
-    User.findByIdAndUpdate(req.body.userId, {$push: {
-        group: req.body.groupId
-    }}, {new: true},
-       (err, result) => {
+    User.findByIdAndUpdate(req.body.userId, {$push: { group: req.body.groupId}}, (err, result) => {
            if (err) {
                return res.status(400).json({error: err})
            }
