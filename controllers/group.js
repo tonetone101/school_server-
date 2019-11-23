@@ -8,12 +8,11 @@ const _ = require('lodash');
 // to find group by ID
 exports.groupById = (req, res, next, id) => {
     Group.findById(id)
-        // .populate('comments', 'text created')
         .populate('createdBy', '_id name')
         .populate('comments.postedBy', '_id name')
         .populate('members', '_id name')
-        .populate('createdBy', '_id name role')
-        .select('_id name mission created comments members photo')
+        .populate('createdBy', '_id name role photo')
+        .select('_id name mission created comments members createdBy photo')
         .exec((err, group) => {
             if (err || !group) {
                 return res.status(400).json({
@@ -86,7 +85,7 @@ exports.getGroups = (req, res) => {
         .populate("comments", "text created")
         .populate("comments.postedBy", "_id name")
         .populate("createdBy", "_id name photo role")
-        .select("_id name mission comments createdBy ")
+        .select("_id name mission createdBy ")
         .sort({ created: -1 })
         .then(groups => {
             res.json(groups);
@@ -126,25 +125,13 @@ exports.addMember = (req, res) => {
         });
 };
 
-
-// exports.addMember = (req, res, next) => {
-//     Group.findByIdAndUpdate(req.body.groupId, {$push: {
-//         members: req.body.userId
-//     }},
-//        (err, result) => {
-//            if (err) {
-//                return res.status(400).json({error: err})
-//            }
-//            next()
-//        } 
-//     )
-// }
-
 // to find all groups that user created
 exports.groupsByUser = (req, res) => {
     Group.find({ createdBy: req.profile._id })
-        .populate('createdBy', '_id name')
-        .select('_id name mission created members')
+        .populate("comments", "text created")
+        .populate("comments.postedBy", "_id name")
+        .populate('createdBy', '_id name role photo')
+        .select('_id name mission comments created createdBy members')
         .sort('_created')
         .exec((err, groups) => {
             if (err) {

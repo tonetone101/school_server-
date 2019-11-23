@@ -47,6 +47,10 @@ role: {
     type: String,
     default: 'student'
 },
+code: {
+    type: Number,
+    default: 8290
+}
 
 }, 
 {timestamps: true}
