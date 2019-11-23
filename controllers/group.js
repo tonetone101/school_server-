@@ -8,11 +8,12 @@ const _ = require('lodash');
 // to find group by ID
 exports.groupById = (req, res, next, id) => {
     Group.findById(id)
+        // .populate('comments', 'text created')
         .populate('createdBy', '_id name')
         .populate('comments.postedBy', '_id name')
         .populate('members', '_id name')
         .populate('createdBy', '_id name role')
-        .select('_id name mission created members photo')
+        .select('_id name mission created comments members photo')
         .exec((err, group) => {
             if (err || !group) {
                 return res.status(400).json({
@@ -81,11 +82,11 @@ exports.singleGroup = (req, res) => {
 
 // get all groups
 exports.getGroups = (req, res) => {
-    console.log(req.body)
     const groups = Group.find()
-         .populate("comments", "text created")
+        .populate("comments", "text created")
+        .populate("comments.postedBy", "_id name")
         .populate("createdBy", "_id name photo role")
-        .select("_id name mission createdBy ")
+        .select("_id name mission comments createdBy ")
         .sort({ created: -1 })
         .then(groups => {
             res.json(groups);
