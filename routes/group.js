@@ -6,7 +6,7 @@ const {createGroup, getGroups,
         deleteGroup, updateGroup,
         groupsByUser, singleGroup,
         groupAdmin, groupPhoto, 
-        comment, uncomment
+        comment, uncomment,
     } = require('../controllers/group');
     const { userById, userPhoto } = require('../controllers/user');
 const { requireSignin } = require('../controllers/auth');
@@ -23,7 +23,6 @@ router.get('/groups/by/:userId', groupsByUser);
 router.get('/group/:groupId', singleGroup);
 router.put('/group/:groupId', requireSignin, groupAdmin, updateGroup);
 router.delete('/group/:groupId', requireSignin, groupAdmin, deleteGroup);
-
 
 router.get('/group/photo/:groupId', groupPhoto);
 

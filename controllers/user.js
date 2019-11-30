@@ -9,7 +9,7 @@ exports.userById = (req, res, next, id) => {
         // populate followers and following users array
         .populate('following', '_id name')
         .populate('followers', '_id name')
-        .populate('group', '_id name mission members')
+        .populate('group', '_id name mission events members')
         .select('_id name email created group photo about role')
         .exec((err, user) => {
             if (err || !user) {
@@ -21,24 +21,6 @@ exports.userById = (req, res, next, id) => {
             next();
         });
 };
-
-const postsForTimeline = (req, res) => {
-    let following = req.profile.following
-    following.push(req.profile._id)
-    Post.find({postedBy: { $in : req.profile.following } })
-    .populate('comments', 'text created')
-    .populate('comments.postedBy', '_id name')
-    .populate('postedBy', '_id name')
-    .sort('-created')
-    .exec((err, posts) => {
-      if (err) {
-        return res.status(400).json({
-          error: errorHandler.getErrorMessage(err)
-        })
-      }
-      res.json(posts)
-    })
-  }
 
 exports.hasAuthorization = (req, res, next) => {
     let sameUser = req.profile && req.auth && req.profile._id == req.auth._id;

@@ -5,9 +5,9 @@ const _ = require('lodash');
 
 exports.uploadById = (req, res, next, id) => {
     Upload.findById(id)
-        .populate('uploadedBy', '_id name')
+        .populate('uploadedBy', '_id name group')
         .populate('comments.uploadedBy', '_id name')
-        .populate('uploadedBy', '_id name role')
+        .populate('uploadedBy', '_id name role group')
         .select('_id title body url created likes comments photo')
         .exec((err, upload) => {
             if (err || !upload) {
@@ -23,7 +23,7 @@ exports.uploadById = (req, res, next, id) => {
 
 exports.getUploads = (req, res) => {
     const uploads = Upload.find()
-        .populate("uploadedBy", "_id name photo")
+        .populate("uploadedBy", "_id name photo group")
         .populate("comments", "text created")
         .populate("comments.uploadedBy", "_id name")
         .select("_id title url body created likes")
@@ -98,7 +98,7 @@ exports.createUpload = (req, res, next) => {
 
 exports.uploadsByUser = (req, res) => {
     Upload.find({ uploadedBy: req.profile._id })
-        .populate('uploadedBy', '_id name')
+        .populate('uploadedBy', '_id name group')
         .select('_id title body url created likes')
         .sort('_created')
         .exec((err, uploads) => {

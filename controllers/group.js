@@ -11,8 +11,9 @@ exports.groupById = (req, res, next, id) => {
         .populate('createdBy', '_id name')
         .populate('comments.postedBy', '_id name')
         .populate('members', '_id name')
+        .populate('events.postedBy', '_id name')
         .populate('createdBy', '_id name role photo')
-        .select('_id name mission created comments members createdBy photo')
+        .select('_id name mission events created comments members createdBy photo')
         .exec((err, group) => {
             if (err || !group) {
                 return res.status(400).json({
@@ -84,6 +85,8 @@ exports.getGroups = (req, res) => {
     const groups = Group.find()
         .populate("comments", "text created")
         .populate("comments.postedBy", "_id name")
+        .populate("events", "created postedBy")
+        .populate("events.postedBy", "_id name")
         .populate("createdBy", "_id name photo role")
         .select("_id name mission createdBy ")
         .sort({ created: -1 })
@@ -131,7 +134,7 @@ exports.groupsByUser = (req, res) => {
         .populate("comments", "text created")
         .populate("comments.postedBy", "_id name")
         .populate('createdBy', '_id name role photo')
-        .select('_id name mission comments created createdBy members')
+        .select('_id name mission comments events created createdBy members')
         .sort('_created')
         .exec((err, groups) => {
             if (err) {
@@ -248,4 +251,41 @@ exports.uncomment = (req, res) => {
                 res.json(result);
             }
         });
+};
+
+exports.share = (req, res) => {
+    let event = req.body.event;
+    event.postedBy = req.body.userId;
+
+    Group.findByIdAndUpdate(req.body.groupId, { $push: { events: event } }, { new: true })
+    .populate('events.postedBy', '_id name')
+    .populate('postedBy', '_id name')
+    .exec((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            } else {
+                res.json(result);
+            }
+        }
+    );
+};
+
+exports.unshare = (req, res) => {
+    let event = req.body.event;
+
+    Group.findByIdAndUpdate(req.body.groupId, { $pull: { events: {_id: event._id}} }, { new: true })
+    .populate('events.postedBy', '_id name')
+    .populate('postedBy', '_id name')
+    .exec((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            } else {
+                res.json(result);
+            }
+        }
+    );
 };

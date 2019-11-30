@@ -79,15 +79,15 @@ exports.isAuth = (req, res, next) => {
     next();
 };
 
-// to cehck if user is an admin
-exports.isAdmin = (req, res, next) => {
-    if (req.profile.role === 0) {
-        return res.status(403).json({
-            error: "Admin resourse! Access denied"
-        });
-    }
-    next();
-};
+// // to cehck if user is an admin
+// exports.isAdmin = (req, res, next) => {
+//     if (req.profile.role === 0) {
+//         return res.status(403).json({
+//             error: "Admin resourse! Access denied"
+//         });
+//     }
+//     next();
+// };
 
 exports.forgotPassword = (req, res) => {
     if (!req.body) return res.status(400).json({ message: 'No request body' });
