@@ -32,6 +32,19 @@ const groupSchema = new mongoose.Schema({
         }
     }
 ],
+messages: [
+  {
+      text: String,
+      created: {
+          type: Date,
+          default: Date.now
+      },
+      postedBy: {
+          type: ObjectId,
+          ref: 'User'
+      }
+  }
+],
   createdBy: {
     type: ObjectId,
     ref: 'User'
